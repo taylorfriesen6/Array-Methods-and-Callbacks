@@ -24,8 +24,8 @@ Use getFinals to do the following:
 hint - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-   /* code here */
+function getFinals(data) {
+   return data.filter(game => (game.Stage === "Final"));
 }
 
 
@@ -36,8 +36,8 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(data, getFinalsCB) {
+    return getFinalsCB(data).map(game => game.Year);
 }
 
 
@@ -49,8 +49,14 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(data, getFinalsCB) {
+    return getFinalsCB(data).map(game => {
+        if (game["Home Team Goals"] > game["Away Team Goals"]) {
+            return game["Home Team Name"];
+        } else {
+            return game["Away Team Name"];
+        }
+    });
 }
 
 
@@ -65,8 +71,10 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(data, getYearsCB, getWinnersCB) {
+    const years = getYearsCB(data, getFinals);
+    const winners = getWinnersCB(data, getFinals);
+    return years.map((year, i) => `In ${year}, ${winners[i]} won the world cup!`);
 }
 
 
@@ -81,8 +89,10 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(/* code here */) {
-   /* code here */
+function getAverageGoals(finals) {
+    const totalScores = finals.map(game => game["Home Team Goals"] + game["Away Team Goals"]);
+    const sum = totalScores.reduce((s,x) => s + x, 0);
+    return (sum / finals.length).toFixed(2);
 }
 
 
